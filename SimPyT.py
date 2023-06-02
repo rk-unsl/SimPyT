@@ -8,7 +8,7 @@ from scipy.io import wavfile
 from ipywidgets import interact, interactive, fixed, interact_manual
 import ipywidgets as widgets
 
-'''
+help='''
  General functions:
    normalize_u(x)
    normalize_b(x)
