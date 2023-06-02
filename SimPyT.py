@@ -321,5 +321,5 @@ def cosine_signal(fs, f, tmax=1, a=1, ph=0):
     x = a * np.cos(2 * np.pi * f * t + ph)
     return x, t
 
-   def what():
-    print(what)
+   def what(x):
+    print(x)
