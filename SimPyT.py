@@ -321,5 +321,28 @@ def cosine_signal(fs, f, tmax=1, a=1, ph=0):
     x = a * np.cos(2 * np.pi * f * t + ph)
     return x, t
 
-   def what(x):
-    print(x)
+   def what():
+    print("""
+ General functions:
+   normalize_u(x)
+   normalize_b(x)
+   power(x)
+   energy(x)
+   
+ plotting functions:
+   plot_time(x, fs, xlim)
+   plot_frequency(x, fs, xlim)
+   plot_frequency_phase(x, fs, xlim)
+   create_spectrogram(x, fs, window_size, overlap)
+   plot_spectrogram(x, fs, window_size, overlap)
+   plot_spectrogram_2d(x, fs, window_size, overlap):
+   plot_spectrogram_3d(x, fs, window_size, overlap):
+
+filtering functions:
+   bandpass_filter(X, fs, finf, fsup)
+
+baseband signals:
+   cosine_signal(fs, f, tmax=1, a=1, ph=0)
+   pulse_signal(fs, periodo, ciclo, tmax=1, polaridad='b')
+   triangular_signal(fs, periodo, tmax=1, tipo='t', polaridad='b')
+""")
