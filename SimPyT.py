@@ -8,7 +8,7 @@ from scipy.io import wavfile
 from ipywidgets import interact, interactive, fixed, interact_manual
 import ipywidgets as widgets
 
-summary='''
+what='''
  General functions:
    normalize_u(x)
    normalize_b(x)
@@ -317,11 +317,9 @@ def cosine_signal(fs, f, tmax=1, a=1, ph=0):
     - Fifth argument: phase in radians
     - Returns x, t: function values, time values
     '''
-    t = np.arange(0, tmax
-
-, step=1. / fs)
+    t = np.arange(0, tmax, step=1. / fs)
     x = a * np.cos(2 * np.pi * f * t + ph)
     return x, t
 
-
-print(summary)
+   def what():
+    print(what)
