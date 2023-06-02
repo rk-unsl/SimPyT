@@ -2,6 +2,7 @@ from __future__ import print_function
 
 import numpy as np
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 from IPython.display import Audio
 from scipy.io import wavfile
 from ipywidgets import interact, interactive, fixed, interact_manual
@@ -19,6 +20,7 @@ import ipywidgets as widgets
    plot_frequency(x, fs, xlim)
    plot_frequency_phase(x, fs, xlim)
    
+   create_spectrogram(x, fs, window_size, overlap)
    bandpass_filter(X, fs, finf, fsup)
 '''
 
@@ -43,8 +45,9 @@ def power(x):
     Sum of the squares of the elements of the vector x divided by the length of the vector.
     Valid for real and complex inputs, in the time and frequency domain.
     '''
-    power = np.sum(np.abs(x) ** 2) / len(x)
-    return power
+    p = np.sum(x * x.conjugate()) / len(x)
+    return p
+
 
 def energy(x):
     '''
@@ -52,8 +55,8 @@ def energy(x):
     Sum of the squares of the elements of the vector x.
     Valid for real and complex inputs, in the time and frequency domain.
     '''
-    energy = np.sum(np.abs(x) ** 2)
-    return energy
+    e = np.sum(x * x.conjugate())
+    return e
 
 def plot_time(x, fs, xlim):
     '''
@@ -152,6 +155,77 @@ def create_spectrogram(x, fs, window_size, overlap):
     freqs = np.fft.fftfreq(window_size, 1 / fs)
     times = np.arange(num_windows) * hop_size / fs
     return np.abs(spectrogram), freqs, times
+   
+def plot_spectrogram(x, fs, window_size, overlap):
+    '''
+    Plots the spectrogram of a time samples vector.
+
+    Arguments:
+    x: Array of time samples.
+    fs: Sampling frequency.
+    window_size: Size of the analysis window (in samples).
+    overlap: Overlap between consecutive windows (as a fraction, e.g., 0.5 for 50% overlap).
+    '''
+    # Create the spectrogram
+    spectrogram, freqs, times = create_spectrogram(x, fs, window_size, overlap)
+
+    # Plot the spectrogram
+    plt.figure(figsize=(10, 6))
+    plt.imshow(np.abs(spectrogram), aspect='auto', origin='lower', cmap='jet', extent=[times[0], times[-1], freqs[0], freqs[-1]])
+    plt.colorbar(label='Magnitude')
+    plt.xlabel('Time (s)')
+    plt.ylabel('Frequency (Hz)')
+    plt.title('Spectrogram')
+    plt.show()
+
+def plot_spectrogram_3d(x, fs, window_size, overlap):
+    '''
+    Plots a 3D spectrogram of a time samples vector.
+
+    Arguments:
+    x: Array of time samples.
+    fs: Sampling frequency.
+    window_size: Size of the analysis window (in samples).
+    overlap: Overlap between consecutive windows (as a fraction, e.g., 0.5 for 50% overlap).
+    '''
+    # Create the spectrogram
+    spectrogram, freqs, times = create_spectrogram(x, fs, window_size, overlap)
+
+    # Create mesh grid for spectrogram plot
+    times_mesh, freqs_mesh = np.meshgrid(times, freqs)
+
+    # Plot the spectrogram in 3D
+    fig = plt.figure(figsize=(12, 8))
+    ax = fig.add_subplot(111, projection='3d')
+    ax.plot_surface(times_mesh, freqs_mesh, np.abs(spectrogram), cmap='jet')
+    ax.set_xlabel('Time (s)')
+    ax.set_ylabel('Frequency (Hz)')
+    ax.set_zlabel('Magnitude')
+    ax.set_title('3D Spectrogram')
+    plt.show()
+
+def plot_spectrogram_2d(x, fs, window_size, overlap):
+    '''
+    Plots a 2D spectrogram of a time samples vector.
+
+    Arguments:
+    x: Array of time samples.
+    fs: Sampling frequency.
+    window_size: Size of the analysis window (in samples).
+    overlap: Overlap between consecutive windows (as a fraction, e.g., 0.5 for 50% overlap).
+    '''
+    # Create the spectrogram
+    spectrogram, freqs, times = create_spectrogram(x, fs, window_size, overlap)
+
+    # Plot the spectrogram
+    plt.figure(figsize=(10, 6))
+    plt.imshow(np.abs(spectrogram), aspect='auto', origin='lower', cmap='jet', extent=[times[0], times[-1], freqs[0], freqs[-1]])
+    plt.colorbar(label='Magnitude')
+    plt.xlabel('Time (s)')
+    plt.ylabel('Frequency (Hz)')
+    plt.title('2D Spectrogram')
+    plt.show()
+
 
 def bandpass_filter(X, fs, finf, fsup):
     '''
@@ -175,7 +249,6 @@ def bandpass_filter(X, fs, finf, fsup):
     X3 = np.fft.ifftshift(X2)
     return X3
 
-
 def triangular_signal(fs, periodo, tmax=1, tipo='t', polaridad='b'):
     '''
     Triangular or sawtooth signal:
@@ -198,7 +271,7 @@ def triangular_signal(fs, periodo, tmax=1, tipo='t', polaridad='b'):
         x = normalize(x)
     else:
         x = normalizeb(x)
-  
+ 
     return x, t
 
 
@@ -242,21 +315,4 @@ def cosine_signal(fs, f, tmax=1, a=1, ph=0):
     return x, t
 
 
-def power(x):
-    '''
-    Power of a vector of samples:
-    Sum of the squares of the elements of the vector x divided by the length of the vector.
-    Valid for real and complex inputs, in the time and frequency domain.
-    '''
-    p = np.sum(x * x.conjugate()) / len(x)
-    return p
 
-
-def energy(x):
-    '''
-    Energy of a vector of samples:
-    Sum of the squares of the elements of the vector x.
-    Valid for real and complex inputs, in the time and frequency domain.
-    '''
-    e = np.sum(x * x.conjugate())
-    return e
