@@ -83,7 +83,7 @@ def plot_time(x, fs, xlim):
     plt.ylabel("Amplitude")
     return
 
-  def plot_frequency(x,fs,xlim):
+def plot_frequency(x,fs,xlim):
     '''
        Plots in the frequency domain, double-sided amplitude spectrum.
        First argument, array of function values over time.
